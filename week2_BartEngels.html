@@ -1,0 +1,86 @@
+<html>
+<head>
+  <title>Week 1 - Sequence Generator</title>
+</head>
+<body>
+<form id="Seq-form">
+  <label for="seqlen">Sequence lengthe:</label><br>
+  <input type="text" id="seqlen" name="seqlen" value="10" required><br>
+  <input type="submit" name="submit" value="Generate">
+</form>
+<hr/>
+
+<p id="welcome"></p>
+
+
+<form id="Search">
+<label for="resEnzym">restriction enzymes: </label><br>
+  <input type="text" id="resEnzym" name="resEnzym" required><br>
+  <input type="submit" name="submit1" value="Search" disabled>
+</form>
+<hr />
+
+<script>
+
+  let sequenceAlphabets = {
+    DNA: ["A", "C", "G", "T"]}
+
+  let form = document.querySelector("#Seq-form");
+  let elements = form.elements;
+
+  // Get the button and bind a 'click' event
+  let submit = elements["submit"];
+  submit.addEventListener("click", updateInfo);
+
+  let seqinput = document.querySelector("#seqlen");
+  seqinput.addEventListener('input', validateSeq );
+
+  let submitButton = document.querySelector("#submit1");
+  submitButton.addEventListener('click', resdiduen);
+
+
+  function validateSeq(e) {
+    if (Number.isInteger(seqinput)){
+      e.target.style.borderColor = "green";
+      submitButton.disabled = false;}
+
+    else { e.target.style.borderColor = "red";
+      submitButton.disabled = true;}
+  }
+
+  function resdiduen(){
+    return "HOI"
+  }
+
+  function updateInfo(e) {
+    // Prevent the page from submitting on submit press
+    e.preventDefault();
+
+    // Get updated values from the form
+    let seqlen = elements["seqlen"].value;
+
+    function createSeq(number = 60){
+      let DnaSeq = "AUG";
+      // check divided by 3 is possible
+      for (let i = 0; i < number - number%3; i++){
+        DnaSeq += sequenceAlphabets.DNA[Math.floor(Math.random() * sequenceAlphabets.DNA.length)]
+      }
+      DnaSeq += "UAG"
+      return DnaSeq
+    }
+
+
+    document.getElementById("welcome").innerHTML = createSeq(seqlen);
+
+
+  }
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
