@@ -5,20 +5,22 @@
 <body>
 <form id="Seq-form">
   <label for="seqlen">Sequence lengthe:</label><br>
-  <input type="text" id="seqlen" name="seqlen" value="10" required><br>
+  <input type="text" id="seqlen" name="seqlen" required><br>
   <input type="submit" name="submit" value="Generate">
 </form>
 <hr/>
 
-<p id="welcome"></p>
+<p id="seq"></p>
 
 
 <form id="Search">
-<label for="resEnzym">restriction enzymes: </label><br>
+<label for="resEnzym">Restriction enzymes: </label><br>
   <input type="text" id="resEnzym" name="resEnzym" required><br>
-  <input type="submit" name="submit1" value="Search" disabled>
+  <input type="submit" id="submit1" value="Search" disabled>
 </form>
 <hr />
+
+<p id="restriction"></p>
 
 <script>
 
@@ -40,7 +42,8 @@
 
 
   function validateSeq(e) {
-    if (Number.isInteger(seqinput)){
+    console.log(e.target.value);
+    if (!isNaN(e.target.value)){
       e.target.style.borderColor = "green";
       submitButton.disabled = false;}
 
@@ -68,9 +71,44 @@
       DnaSeq += "UAG"
       return DnaSeq
     }
+    document.getElementById("seq").innerHTML = createSeq(seqlen);
 
 
-    document.getElementById("welcome").innerHTML = createSeq(seqlen);
+
+
+    let form = document.querySelector("#Search");
+    form.addEventListener('submit', fetchSearch);
+    let target = document.querySelector("#restriction");
+
+    function fetchSearch(e) {
+      e.preventDefault();
+      let formData = new FormData(e.target);
+
+      let resURL = "https://bioinf.nl/enzyme/api/v1/enzyme/";
+      let paramString = new URLSearchParams(formData).toString();
+      let newparamString = paramString.slice(9)
+      console.log(newparamString);
+      let URL = resURL + newparamString;
+
+      fetch(resURL + paramString)
+              .then(response => response.json())
+              .then(data => giveRestriction(data))
+              .catch(error => {
+                console.log("Error!" + error);
+              });
+    }
+
+    function giveRestriction(data) {
+      if (data.type === "single") {
+      } else if (data.type === "twopart") {
+        console.log(`${data.setup}\n${data.delivery}`);
+
+    }
+
+    document.getElementById("restriction").innerHTML = giveRestriction();
+
+
+
   }
 </script>
 </body>
