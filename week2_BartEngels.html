@@ -16,7 +16,7 @@
 <form id="Search">
 <label for="resEnzym">Restriction enzymes: </label><br>
   <input type="text" id="resEnzym" name="resEnzym" required><br>
-  <input type="submit" id="submit1" value="Search" disabled>
+  <input type="submit" id="submitResEnzyme" value="Search" disabled>
 </form>
 <hr />
 
@@ -37,8 +37,8 @@
   let seqinput = document.querySelector("#seqlen");
   seqinput.addEventListener('input', validateSeq );
 
-  let submitButton = document.querySelector("#submit1");
-  submitButton.addEventListener('click', resdiduen);
+  let submitButton = document.querySelector("#submitResEnzyme");
+  submitButton.addEventListener('click', fetch );
 
 
   function validateSeq(e) {
@@ -49,10 +49,6 @@
 
     else { e.target.style.borderColor = "red";
       submitButton.disabled = true;}
-  }
-
-  function resdiduen(){
-    return "HOI"
   }
 
   function updateInfo(e) {
@@ -73,9 +69,6 @@
     }
     document.getElementById("seq").innerHTML = createSeq(seqlen);
 
-
-
-
     let form = document.querySelector("#Search");
     form.addEventListener('submit', fetchSearch);
     let target = document.querySelector("#restriction");
@@ -85,30 +78,21 @@
       let formData = new FormData(e.target);
 
       let resURL = "https://bioinf.nl/enzyme/api/v1/enzyme/";
-      let paramString = new URLSearchParams(formData).toString();
-      let newparamString = paramString.slice(9)
-      console.log(newparamString);
-      let URL = resURL + newparamString;
+      let myElement = document.querySelector("#resEnzym").value;
 
-      fetch(resURL + paramString)
+      console.log(myElement);
+
+      fetch(resURL + myElement)
               .then(response => response.json())
-              .then(data => giveRestriction(data))
+              .then(data => showData(data))
               .catch(error => {
                 console.log("Error!" + error);
               });
     }
-
-    function giveRestriction(data) {
-      if (data.type === "single") {
-      } else if (data.type === "twopart") {
-        console.log(`${data.setup}\n${data.delivery}`);
-
+    function showData(data) {
+      document.getElementById("restriction").innerHTML = `${data.value}<br />`;
     }
-
-    document.getElementById("restriction").innerHTML = giveRestriction();
-
-
-
+    // document.getElementById("restriction").innerHTML = ;
   }
 </script>
 </body>
