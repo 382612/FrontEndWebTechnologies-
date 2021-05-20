@@ -59,12 +59,12 @@
     let seqlen = elements["seqlen"].value;
 
     function createSeq(number = 60){
-      let DnaSeq = "AUG";
+      let DnaSeq = "ATG";
       // check divided by 3 is possible
       for (let i = 0; i < number - number%3; i++){
         DnaSeq += sequenceAlphabets.DNA[Math.floor(Math.random() * sequenceAlphabets.DNA.length)]
       }
-      DnaSeq += "UAG"
+      DnaSeq += "TAG"
       return DnaSeq
     }
     document.getElementById("seq").innerHTML = createSeq(seqlen);
@@ -89,9 +89,22 @@
                 console.log("Error!" + error);
               });
     }
-    function showData(data) {
-      document.getElementById("restriction").innerHTML = `${data.name}<br / >${data.site}`;
+
+
+    function getSplicingSite(data){
+      let Sequence = createSeq(seqlen);
+      let regExp = new RegExp(data, 'gi');
+      let indexes = [...Sequence.matchAll(regExp)].map(hit => hit.index);
+      console.log(indexes)
+      return indexes;
+
     }
+
+    function showData(data) {
+      document.getElementById("restriction").innerHTML = `Indexes: ` + getSplicingSite(data) ;
+    }
+
+
     // document.getElementById("restriction").innerHTML = ;
   }
 </script>
