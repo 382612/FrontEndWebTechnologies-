@@ -1,5 +1,5 @@
 'use strict'
-
+const fs = require('fs');
 
 // ./routes/root.js - adopted to demonstrate plugin usage
 module.exports = async function (fastify, opts) {
@@ -8,4 +8,5 @@ module.exports = async function (fastify, opts) {
     return fastify.parser("Apoptosis");
 
   })
+  module.exports = routes;
 }

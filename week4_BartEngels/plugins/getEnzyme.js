@@ -15,7 +15,6 @@ async function readRestrictionEnzyme() {
 }
 
 function parseVariants(data) {
-
     return data
         .map(enzyme => {
             if (enzyme.length === 3)
@@ -40,18 +39,23 @@ const enzymeContainer = {
             return this.enzymes.get(enzyme);
     },
     addEnzyme: function(enzyme) {
+        if (enzyme.getEnzyme(parseVariants())){
+            console.log(enzyme)
+
+        }
         // ... code for adding an enzyme to the Map
     }
 }
 
-module.exports = fp(async function (fastify, opts) {
-    fastify.decorate('parser', getPathway)
-
-})
 async function main() {
     let vcfData = await readRestrictionEnzyme();
     console.log(`> A total of ${vcfData.length} variants have been read\n`);
-    console.log(parseVariants(vcfData))};
+    console.log(parseVariants(vcfData));
+    module.exports = readRestrictionEnzyme(vcfData)
+    console.log(enzymeContainer.getEnzyme(parseVariants(vcfData).pop('AclNI')))
+
+    }
+
 
 
 main();
